@@ -292,7 +292,7 @@ int main(int argc, char** argv) {
   if (FLAGS_skip_input) {
     GENERIC_BENCHMARK("SkipInput", FileReaderType::kNone);
   } else {
-    GENERIC_BENCHMARK("InputFromBatchVector", FileReaderType::kBuffered);
+//    GENERIC_BENCHMARK("InputFromBatchVector", FileReaderType::kBuffered);
     GENERIC_BENCHMARK("InputFromBatchStream", FileReaderType::kStream);
   }
 
