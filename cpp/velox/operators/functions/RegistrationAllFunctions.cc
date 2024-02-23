@@ -53,6 +53,8 @@ void registerFunctionOverwrite() {
   velox::registerFunction<RoundFunction, double, double, int32_t>({"round"});
   velox::registerFunction<RoundFunction, float, float, int32_t>({"round"});
 
+  velox::registerFunction<Empty2NullFunction, facebook::velox::Varchar, facebook::velox::Varchar>({"empty2null"});
+
   velox::exec::registerVectorFunction(
       "row_constructor_with_null",
       std::vector<std::shared_ptr<velox::exec::FunctionSignature>>{},

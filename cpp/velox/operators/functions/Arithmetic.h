@@ -18,6 +18,8 @@
 #include <stdint.h>
 #include <cmath>
 #include <type_traits>
+#include "velox/functions/Macros.h"
+#include "velox/type/Type.h"
 
 namespace gluten {
 template <typename T>
@@ -49,6 +51,24 @@ struct RoundFunction {
   template <typename TInput>
   FOLLY_ALWAYS_INLINE void call(TInput& result, const TInput& a, const int32_t b = 0) {
     result = round(a, b);
+  }
+};
+
+template <typename T>
+struct Empty2NullFunction {
+  VELOX_DEFINE_FUNCTION_TYPES(T);
+
+  // Results refer to strings in the first argument.
+  static constexpr int32_t reuse_strings_from_arg = 0;
+
+  FOLLY_ALWAYS_INLINE bool call(
+      out_type<facebook::velox::Varchar>& result,
+      const arg_type<facebook::velox::Varchar>& input) {
+    if (input.empty()) {
+      return false;
+    }
+    result.setNoCopy(input);
+    return true;
   }
 };
 } // namespace gluten
