@@ -459,7 +459,7 @@ class VeloxParquetDataTypeValidationSuite extends VeloxWholeStageTransformerSuit
   }
 
   test("Parquet Write all types") {
-    withSQLConf(("spark.gluten.sql.native.writer.enabled", "true"), ("spark.gluten.sql.parquet.write.fallback.complexTypes", "map,struct")) {
+    withSQLConf(("spark.gluten.sql.native.writer.enabled", "true")) {
       withTempDir {
         dir =>
           val write_path = dir.toURI.getPath
