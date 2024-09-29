@@ -214,12 +214,13 @@ object VeloxBackendSettings extends BackendSettingsApi {
 
     // Validate if all types are supported.
     def validateDataTypes(): Option[String] = {
+      val forceFallbackComplexTypes = GlutenConfig.getConf.forceFallbackParquetWriteComplexTypes
       val unsupportedTypes = fields.flatMap {
         field =>
           field.dataType match {
-            case _: StructType => Some("StructType")
-            case _: ArrayType => Some("ArrayType")
-            case _: MapType => Some("MapType")
+            case _: StructType if forceFallbackComplexTypes.contains("struct") => Some("StructType")
+            case _: ArrayType if forceFallbackComplexTypes.contains("array") => Some("ArrayType")
+            case _: MapType if forceFallbackComplexTypes.contains("map") => Some("MapType")
             case _: YearMonthIntervalType => Some("YearMonthIntervalType")
             case _ => None
           }

@@ -458,8 +458,8 @@ class VeloxParquetDataTypeValidationSuite extends VeloxWholeStageTransformerSuit
     }
   }
 
-  test("Velox Parquet Write") {
-    withSQLConf(("spark.gluten.sql.native.writer.enabled", "true")) {
+  test("Parquet Write all types") {
+    withSQLConf(("spark.gluten.sql.native.writer.enabled", "true"), ("spark.gluten.sql.parquet.write.fallback.complexTypes", "map,struct")) {
       withTempDir {
         dir =>
           val write_path = dir.toURI.getPath
@@ -471,6 +471,24 @@ class VeloxParquetDataTypeValidationSuite extends VeloxWholeStageTransformerSuit
             .drop("array")
             .drop("struct")
             .drop("map")
+          df.write.mode("append").format("parquet").save(write_path)
+          val parquetDf = spark.read
+            .format("parquet")
+            .load(write_path)
+          checkAnswer(parquetDf, df)
+      }
+    }
+  }
+
+  test("Parquet Write complex types") {
+    withSQLConf(("spark.gluten.sql.native.writer.enabled", "true")) {
+      withTempDir {
+        dir =>
+          val write_path = dir.toURI.getPath
+          val data_path = getClass.getResource("/").getPath + "/data-type-validation-data/type1"
+          val df = spark.read
+            .format("parquet")
+            .load(data_path)
           df.write.mode("append").format("parquet").save(write_path)
           val parquetDf = spark.read
             .format("parquet")

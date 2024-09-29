@@ -116,6 +116,9 @@ class GlutenConfig(conf: SQLConf) extends Logging {
   def forceParquetTimestampTypeScanFallbackEnabled: Boolean =
     conf.getConf(VELOX_FORCE_PARQUET_TIMESTAMP_TYPE_SCAN_FALLBACK)
 
+  def forceFallbackParquetWriteComplexTypes: String =
+    conf.getConf(VELOX_FORCE_FALLBACK_PARQUET_WRITE_COMPLEX_TYPES)
+
   def scanFileSchemeValidationEnabled: Boolean =
     conf.getConf(VELOX_SCAN_FILE_SCHEME_VALIDATION_ENABLED)
 
@@ -2042,6 +2045,13 @@ object GlutenConfig {
       .doc("Force fallback for parquet timestamp type scan.")
       .booleanConf
       .createWithDefault(false)
+
+  val VELOX_FORCE_FALLBACK_PARQUET_WRITE_COMPLEX_TYPES =
+    buildConf("spark.gluten.sql.parquet.write.fallback.complexTypes")
+      .internal()
+      .doc("Force fallback complex type for parquet writer.")
+      .stringConf
+      .createWithDefault("struct,array,map")
 
   val VELOX_SCAN_FILE_SCHEME_VALIDATION_ENABLED =
     buildConf("spark.gluten.sql.scan.fileSchemeValidation.enabled")
