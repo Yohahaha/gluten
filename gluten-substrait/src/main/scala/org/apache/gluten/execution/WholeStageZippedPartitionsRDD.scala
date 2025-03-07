@@ -20,7 +20,7 @@ import org.apache.gluten.backendsapi.BackendsApiManager
 import org.apache.gluten.config.GlutenNumaBindingInfo
 import org.apache.gluten.metrics.{GlutenTimeMetric, IMetrics}
 
-import org.apache.spark.{Partition, SparkConf, SparkContext, TaskContext}
+import org.apache.spark.{Partition, SparkContext, TaskContext}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.execution.metric.SQLMetric
 import org.apache.spark.sql.vectorized.ColumnarBatch
@@ -34,7 +34,6 @@ class WholeStageZippedPartitionsRDD(
     @transient private val sc: SparkContext,
     var rdds: ColumnarInputRDDsWrapper,
     numaBindingInfo: GlutenNumaBindingInfo,
-    sparkConf: SparkConf,
     resCtx: WholeStageTransformContext,
     pipelineTime: SQLMetric,
     updateNativeMetrics: IMetrics => Unit,
@@ -51,7 +50,6 @@ class WholeStageZippedPartitionsRDD(
             context,
             inputIterators,
             numaBindingInfo,
-            sparkConf,
             resCtx.root,
             pipelineTime,
             updateNativeMetrics,

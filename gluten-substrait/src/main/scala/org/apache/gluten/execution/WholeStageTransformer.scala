@@ -229,8 +229,6 @@ case class WholeStageTransformer(child: SparkPlan, materializeInput: Boolean = f
   @transient override lazy val metrics: Map[String, SQLMetric] =
     BackendsApiManager.getMetricsApiInstance.genWholeStageTransformerMetrics(sparkContext)
 
-  val sparkConf: SparkConf = sparkContext.getConf
-
   val serializableHadoopConf: SerializableConfiguration = new SerializableConfiguration(
     sparkContext.hadoopConfiguration)
 
@@ -561,7 +559,6 @@ case class WholeStageTransformer(child: SparkPlan, materializeInput: Boolean = f
         sparkContext,
         inputRDDs,
         numaBindingInfo,
-        sparkConf,
         wsCtx,
         pipelineTime,
         BackendsApiManager.getMetricsApiInstance.metricsUpdatingFunction(
